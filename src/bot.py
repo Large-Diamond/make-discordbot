@@ -18,16 +18,16 @@ load_dotenv()
 
 TOKEN = os.getenv('DISCORD_BOT_TOKEN')
 CHANNEL_ID = os.getenv('DISCORD_CHANNEL_ID')
-#CHANNEL_ID = int(os.getenv('DISCORD_CHANNEL_ID'))
+
 SERVER_IP = os.getenv('SERVER_IP')
 SERVER_PORT = os.getenv('SERVER_PORT')
-# SERVER_PORT = int(os.getenv('SERVER_PORT'))
+
 
 intents = discord.Intents.default()
 intents.message_content = True 
 bot = commands.Bot(command_prefix='!', intents=intents)
 
-last_message = None  # Variable to store the last message sent
+last_message = None 
 
 def format_players(player_list):
     if not player_list:
@@ -76,16 +76,14 @@ def get_server_info():
 
 @tasks.loop(minutes=1)
 async def send_to_discord():
-    global last_message  # declareLastMessageComoGlobal
+    global last_message  
     channel = bot.get_channel(CHANNEL_ID)
     if channel:
         embed = get_server_info()
-        # await channel.send(embed=embed)
         if last_message:
             try:
                 await last_message.delete()
             except discord.errors.NotFound:
-                pass  # The message has already been deleted
         last_message = await channel.send(embed=embed)
 
 @bot.event
